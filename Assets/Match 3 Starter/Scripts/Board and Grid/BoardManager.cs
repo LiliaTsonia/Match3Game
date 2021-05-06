@@ -8,9 +8,9 @@ public class BoardManager : MonoBehaviour, ICommonBoard {
 
 	[SerializeField] private List<Sprite> _charactersSprites;
 	[SerializeField] private GameObject _tilePrefab;
-	[SerializeField] private int _xSize, _ySize;
+	[SerializeField] private int _xSize = 5, _ySize = 5;
 
-	public Tile[,] _tiles;
+	private ICommonTile[,] _tiles;
 
 	private IEnumerator _currentCoroutine;
 
@@ -18,7 +18,6 @@ public class BoardManager : MonoBehaviour, ICommonBoard {
 
 	void Start () {
 		Tile.OnMatchFound += ClearAndRefillBoard;
-
 		Vector2 offset = _tilePrefab.GetComponent<SpriteRenderer>().bounds.size;
 		SetBoardPosition(offset);
 
@@ -26,7 +25,7 @@ public class BoardManager : MonoBehaviour, ICommonBoard {
 	}
 
 	public void CreateBoard (float xOffset, float yOffset) {
-		_tiles = new Tile[_xSize, _ySize];
+		_tiles = new ICommonTile[_xSize, _ySize];
 
         float startX = transform.position.x;
 		float startY = transform.position.y;
@@ -34,7 +33,7 @@ public class BoardManager : MonoBehaviour, ICommonBoard {
 		for (byte x = 0; x < _xSize; x++) {
 			for (byte y = 0; y < _ySize; y++) {
 				var tileObject = Instantiate(_tilePrefab, new Vector3(startX + (xOffset * x), startY + (yOffset * y), 0), _tilePrefab.transform.rotation, transform);
-				var tile = tileObject.GetComponent<Tile>();
+				var tile = tileObject.GetComponent<ICommonTile>();
 
 				tile.ImageSource = GetNewTileImage(x, y);
 				_tiles[x, y] = tile;
@@ -110,7 +109,7 @@ public class BoardManager : MonoBehaviour, ICommonBoard {
 	private IEnumerator ShiftTilesDown(int x, int yStart, float shiftDelay = .03f)
 	{
 		IsShifting = true;
-		var tiles = new List<Tile>();
+		var tiles = new List<ICommonTile>();
 		var nullCount = 0;
 
 		for (var y = yStart; y < _ySize; y++)
