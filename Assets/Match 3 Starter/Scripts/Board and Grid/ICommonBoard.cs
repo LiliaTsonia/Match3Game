@@ -5,6 +5,6 @@ using UnityEngine;
 public interface ICommonBoard
 {
     void CreateBoard(float xOffset, float yOffset);
-    Sprite GetCurrentTileImage(byte xIndex, byte yIndex, ref List<Sprite> possibleCharacters);
+    Sprite GetNewTileImage(byte xIndex, byte yIndex);
     void ClearAndRefillBoard();
 }

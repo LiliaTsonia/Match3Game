@@ -36,17 +36,17 @@ public class BoardManager : MonoBehaviour, ICommonBoard {
 				var tileObject = Instantiate(_tilePrefab, new Vector3(startX + (xOffset * x), startY + (yOffset * y), 0), _tilePrefab.transform.rotation, transform);
 				var tile = tileObject.GetComponent<Tile>();
 
-				var possibleCharacters = new List<Sprite>();
-				possibleCharacters.AddRange(_charactersSprites);
-
-				tile.ImageSource = GetCurrentTileImage(x, y, ref possibleCharacters);
+				tile.ImageSource = GetNewTileImage(x, y);
 				_tiles[x, y] = tile;
 			}
         }
     }
 
-	public Sprite GetCurrentTileImage(byte xIndex, byte yIndex, ref List<Sprite> possibleCharacters)
+	public Sprite GetNewTileImage(byte xIndex, byte yIndex)
     {
+		var possibleCharacters = new List<Sprite>();
+		possibleCharacters.AddRange(_charactersSprites);
+
 		if (xIndex != 0)
 		{
 			possibleCharacters.Remove(_tiles[xIndex - 1, yIndex].ImageSource);
@@ -96,32 +96,41 @@ public class BoardManager : MonoBehaviour, ICommonBoard {
 				}
 			}
 		}
+
+		for (int x = 0; x < _xSize; x++)
+		{
+			for (int y = 0; y < _ySize; y++)
+			{
+				_tiles[x, y].ClearAllMatches();
+			}
+		}
+
 	}
 
 	private IEnumerator ShiftTilesDown(int x, int yStart, float shiftDelay = .03f)
 	{
 		IsShifting = true;
-		var sprites = new List<Sprite>();
+		var tiles = new List<Tile>();
 		var nullCount = 0;
 
 		for (var y = yStart; y < _ySize; y++)
 		{
-			var sprite = _tiles[x, y].ImageSource;
-			if (sprite == null)
+			var tile = _tiles[x, y];
+			if (tile.ImageSource == null)
 			{
 				nullCount++;
 			}
-			sprites.Add(sprite);
+			tiles.Add(tile);
 		}
 
 		for (var i = 0; i < nullCount; i++)
 		{
 			yield return new WaitForSeconds(shiftDelay);
 
-			for (var k = 0; k < sprites.Count - 1; k++)
+			for (var k = 0; k < tiles.Count - 1; k++)
 			{
-				sprites[k] = sprites[k + 1];
-				sprites[k + 1] = null;
+				tiles[k].ImageSource = tiles[k + 1].ImageSource;
+				tiles[k + 1].ImageSource = GetNewTileImage((byte)x, (byte)(_ySize - 1));
 			}
 		}
 

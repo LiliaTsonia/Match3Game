@@ -19,6 +19,7 @@ public class Tile : MonoBehaviour, ICommonTile
 
 	public Vector2 Offset => _renderer.bounds.size;
 
+	//TODO Get rid of this field since there is already public Sprite property
 	public SpriteRenderer SpriteRenderer => _renderer;
 
 	public Sprite ImageSource 
