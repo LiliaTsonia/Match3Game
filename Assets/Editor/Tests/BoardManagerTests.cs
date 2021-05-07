@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+//using NSubstitute;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-namespace Tests
+namespace Editor.Tests
 {
     public class BoardManagerTests
     {
@@ -12,7 +13,11 @@ namespace Tests
         public void WhenCreateBoard_AndSizeNotSetInEditor_ThenCreateBoardWithNonZeroSize()
         {
             //Arrange
-            BoardManager boardManager = Create.Board();
+            //TODO redo using Create and Setup
+            //ICommonBoard board = Substitute.For<ICommonBoard>();
+            
+            //board.CreateBoard(1f, 1f);
+            //Assert.AreEqual(25, board.BoardSize);
 
             //Act
 
@@ -24,7 +29,7 @@ namespace Tests
         public void WhenGetNewTileImage_AndTileIndexesAreEqualZero_ThenReturnImageFromExistingTiles()
         {
             //Arrange
-            BoardManager boardManager = Create.Board();
+            //BoardManager boardManager = Create.Board();
             //Act
 
             //Assert

@@ -3,48 +3,57 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
-public class BoardManager : MonoBehaviour, ICommonBoard {
+public class CommonBoard : MonoBehaviour, ICommonBoard {
 	public static event Action<int> OnBoardPositionSet;
 
-	[SerializeField] private List<Sprite> _charactersSprites;
-	[SerializeField] private GameObject _tilePrefab;
-	[SerializeField] private int _xSize = 5, _ySize = 5;
+	[SerializeField] private BoardController _boardController;
 
 	private ICommonTile[,] _tiles;
 
 	private IEnumerator _currentCoroutine;
 
+	public int BoardSize => _tiles.Length;
+
 	public static bool IsShifting { get; private set; }
 
-	void Start () {
+    private void Awake()
+    {
+		_boardController.SetBoardController(this);
+    }
+
+	void Start()
+	{
 		Tile.OnMatchFound += ClearAndRefillBoard;
-		Vector2 offset = _tilePrefab.GetComponent<SpriteRenderer>().bounds.size;
+		Vector2 offset = _boardController.TilePrefab.GetComponent<SpriteRenderer>().bounds.size;
 		SetBoardPosition(offset);
 
-        CreateBoard(offset.x, offset.y);
+		_boardController.CreateBoard(offset.x, offset.y);
 	}
 
-	public void CreateBoard (float xOffset, float yOffset) {
-		_tiles = new ICommonTile[_xSize, _ySize];
+	public void CreateBoard(float xOffset, float yOffset)
+    {
+        _tiles = new ICommonTile[_boardController.XSize, _boardController.YSize];
 
         float startX = transform.position.x;
-		float startY = transform.position.y;
+        float startY = transform.position.y;
 
-		for (byte x = 0; x < _xSize; x++) {
-			for (byte y = 0; y < _ySize; y++) {
-				var tileObject = Instantiate(_tilePrefab, new Vector3(startX + (xOffset * x), startY + (yOffset * y), 0), _tilePrefab.transform.rotation, transform);
-				var tile = tileObject.GetComponent<ICommonTile>();
+        for (byte x = 0; x < _boardController.XSize; x++)
+        {
+            for (byte y = 0; y < _boardController.YSize; y++)
+            {
+                var tileObject = Instantiate(_boardController.TilePrefab, new Vector3(startX + (xOffset * x), startY + (yOffset * y), 0), _boardController.TilePrefab.transform.rotation, transform);
+                var tile = tileObject.GetComponent<ICommonTile>();
 
-				tile.ImageSource = GetNewTileImage(x, y);
-				_tiles[x, y] = tile;
-			}
+                tile.ImageSource = _boardController.GetNewTileImage(x, y);
+                _tiles[x, y] = tile;
+            }
         }
     }
 
-	public Sprite GetNewTileImage(byte xIndex, byte yIndex)
+    public Sprite GetNewTileImage(byte xIndex, byte yIndex)
     {
 		var possibleCharacters = new List<Sprite>();
-		possibleCharacters.AddRange(_charactersSprites);
+		possibleCharacters.AddRange(_boardController.CharactersSprites);
 
 		if (xIndex != 0)
 		{
@@ -72,21 +81,21 @@ public class BoardManager : MonoBehaviour, ICommonBoard {
 
 	private void SetBoardPosition(Vector2 tileOffset)
     {
-		var xOffset = (_xSize * tileOffset.x - 1) / 2f;
-		var yOffset = (_ySize * tileOffset.y - 1) / 2f;
+		var xOffset = (_boardController.XSize * tileOffset.x - 1) / 2f;
+		var yOffset = (_boardController.YSize * tileOffset.y - 1) / 2f;
 
 		var holderOffset = new Vector2(xOffset, yOffset);
 		holderOffset *= -1f;
 		transform.position = holderOffset;
 
-		OnBoardPositionSet?.Invoke(_xSize + 1);
+		OnBoardPositionSet?.Invoke(_boardController.XSize + 1);
 	}
 
 	private IEnumerator FindNullTiles()
 	{
-		for (var x = 0; x < _xSize; x++)
+		for (var x = 0; x < _boardController.XSize; x++)
 		{
-			for (var y = 0; y < _ySize; y++)
+			for (var y = 0; y < _boardController.YSize; y++)
 			{
 				if (_tiles[x, y].ImageSource == null)
 				{
@@ -96,9 +105,9 @@ public class BoardManager : MonoBehaviour, ICommonBoard {
 			}
 		}
 
-		for (int x = 0; x < _xSize; x++)
+		for (int x = 0; x < _boardController.XSize; x++)
 		{
-			for (int y = 0; y < _ySize; y++)
+			for (int y = 0; y < _boardController.YSize; y++)
 			{
 				_tiles[x, y].ClearAllMatches();
 			}
@@ -112,7 +121,7 @@ public class BoardManager : MonoBehaviour, ICommonBoard {
 		var tiles = new List<ICommonTile>();
 		var nullCount = 0;
 
-		for (var y = yStart; y < _ySize; y++)
+		for (var y = yStart; y < _boardController.YSize; y++)
 		{
 			var tile = _tiles[x, y];
 			if (tile.ImageSource == null)
@@ -129,7 +138,7 @@ public class BoardManager : MonoBehaviour, ICommonBoard {
 			for (var k = 0; k < tiles.Count - 1; k++)
 			{
 				tiles[k].ImageSource = tiles[k + 1].ImageSource;
-				tiles[k + 1].ImageSource = GetNewTileImage((byte)x, (byte)(_ySize - 1));
+				tiles[k + 1].ImageSource = GetNewTileImage((byte)x, (byte)(_boardController.YSize - 1));
 			}
 		}
 

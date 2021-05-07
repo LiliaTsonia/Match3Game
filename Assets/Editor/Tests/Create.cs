@@ -6,10 +6,10 @@ namespace Tests
 {
     public class Create
     {
-        public static BoardManager Board()
-        {
-            return new GameObject().AddComponent<BoardManager>();
-        }
+        //public static BoardManager Board()
+        //{
+        //    return new GameObject().AddComponent<BoardManager>();
+        //}
     }
 }
 

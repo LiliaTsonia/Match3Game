@@ -30,7 +30,7 @@ public class Tile : MonoBehaviour, ICommonTile
 
     private void OnMouseDown()
     {
-		if (_renderer.sprite == null || BoardManager.IsShifting)
+		if (_renderer.sprite == null || CommonBoard.IsShifting)
 		{
 			return;
 		}

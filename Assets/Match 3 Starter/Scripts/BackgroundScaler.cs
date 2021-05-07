@@ -9,7 +9,7 @@ public class BackgroundScaler : MonoBehaviour
 
     private void Awake()
     {
-		BoardManager.OnBoardPositionSet += SetScale;
+		CommonBoard.OnBoardPositionSet += SetScale;
 	}
 
 	private void SetScale(int size)
