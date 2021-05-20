@@ -10,30 +10,35 @@ namespace Tests
     public class BoardManagerTests
     {
         [Test]
-        public void WhenCreateBoard_AndSizeNotSetInEditor_ThenCreateBoardWithNonZeroSize()
+        public void WhenSetBoardPosition_AndSizeIs25OffsetIs1_ThenReturnPositionMinus2()
         {
-            ////Arrange
-            ////TODO redo using Create and Setup
-            //ICommonBoard board = Substitute.For<ICommonBoard>();
-            //BoardController boardController = Substitute.For<BoardController>();
-            //boardController.SetBoardController(board);
+            //Arrange
+            //TODO redo using Create and Setup
+            ICommonBoard board = Substitute.For<ICommonBoard>();
+            board.BoardSize.Returns<Vector2>(new Vector2(5, 5));
+            BoardController boardController = new BoardController(board);
 
             ////Act
-            //boardController.CreateBoard(1f, 1f);
+            var position = boardController.SetBoardPosition(Vector2.one);
 
             ////Assert
-            //Assert.AreEqual(25, board.BoardSize);
+            Assert.AreEqual(new Vector2(-2f,-2f), position);
         }
 
         [Test]
-        public void WhenGetNewTileImage_AndTileIndexesAreEqualZero_ThenReturnImageFromExistingTiles()
+        public void WhenSetBoardPosition_AndSizeIs49OffsetIsZero_ThenReturnPositionZeroDotFive()
         {
             //Arrange
-            //BoardManager boardManager = Create.Board();
-            //Act
+            //TODO redo using Create and Setup
+            ICommonBoard board = Substitute.For<ICommonBoard>();
+            board.BoardSize.Returns<Vector2>(new Vector2(7, 7));
+            BoardController boardController = new BoardController(board);
 
-            //Assert
+            ////Act
+            var position = boardController.SetBoardPosition(Vector2.zero);
 
+            ////Assert
+            Assert.AreEqual(new Vector2(.5f, .5f), position);
         }
     }
 }
