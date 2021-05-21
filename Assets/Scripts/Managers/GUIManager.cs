@@ -25,7 +25,7 @@ public class GUIManager : MonoBehaviour {
 
 	// Show the game over panel
 	public void GameOver() {
-		GameManager.instance.gameOver = true;
+		GameManager.Instance.IsGameOver = true;
 
 		gameOverPanel.SetActive(true);
 
