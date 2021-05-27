@@ -5,7 +5,7 @@ using System;
 
 public class TileController
 {
-    public static event Action<Clip> OnSoundPlay;
+    public static event Action<SoundClip, AudioType> OnSoundPlay;
     public static event Action OnMatchFound;
 
     private static Color selectedColor = new Color(.5f, .5f, .5f, 1.0f);
@@ -42,7 +42,7 @@ public class TileController
 				if (GetAllAdjacentTiles().Contains(previousSelected._tile))
 				{
 					_tile.SwapSprite(previousSelected._tile);
-					OnSoundPlay?.Invoke(Clip.Swap);
+					OnSoundPlay?.Invoke(SoundClip.Swap, AudioType.SFX_Master);
 					previousSelected.Deselect();
 					ClearAllMatches();
 				}
@@ -100,7 +100,7 @@ public class TileController
 			_tile.ImageSource = null;
 			_matchFound = false;
 			OnMatchFound?.Invoke();
-			OnSoundPlay?.Invoke(Clip.Clear);
+			OnSoundPlay?.Invoke(SoundClip.Clear, AudioType.SFX_Master);
 		}
 	}
 
@@ -109,7 +109,7 @@ public class TileController
 		_isSelected = true;
 		_tile.SetColor(selectedColor);
 		previousSelected = this;
-		OnSoundPlay?.Invoke(Clip.Select);
+		OnSoundPlay?.Invoke(SoundClip.Select, AudioType.SFX_Master);
 	}
 
 	private void Deselect()
