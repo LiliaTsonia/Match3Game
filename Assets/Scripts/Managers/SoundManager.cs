@@ -9,6 +9,11 @@ public enum SoundClip
     Hyperfun
 };
 
+/// <summary>
+/// Try to move soundmanager (and gamemanager???) to DI project context
+/// Try addressables for sound clips
+/// </summary>
+
 public class SoundManager : MonoBehaviour, IPlayable
 {
     [SerializeField] private AudioSource[] _audioSources; //0 : SFX_Master, 1 : Music_Master

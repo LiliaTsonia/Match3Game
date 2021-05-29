@@ -4,6 +4,10 @@ using System.Collections.Generic;
 using System;
 using Zenject;
 
+/// <summary>
+/// Try addressables for character sprites
+/// </summary>
+
 public class CommonBoard : MonoBehaviour, ICommonBoard {
 	[SerializeField] private Vector2 _boardSize = new Vector2(5, 5);
 	[SerializeField] private List<Sprite> _charactersSprites;
